@@ -1,0 +1,165 @@
+/* =====================================================
+   ESTILOS CSS - FORMULARIO DE CONTACTO
+   Diseño moderno, limpio y responsivo.
+   Utiliza Flexbox para alineación y espaciado.
+   ===================================================== */
+
+/* Reset básico y tipografía */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Contenedor principal */
+.container {
+    background-color: #ffffff;
+    max-width: 600px;
+    width: 100%;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.descripcion {
+    color: #7f8c8d;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Estructura de campos del formulario */
+.campo {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* Estilos comunes para inputs, select y textarea */
+input, select, textarea {
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s;
+    font-family: inherit;
+    background-color: #fafafa;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+}
+
+/* Estados hover */
+input:hover, select:hover, textarea:hover {
+    border-color: #b0c4de;
+}
+
+/* Estilo para campos con error (se aplicará desde JS) */
+input.error, select.error, textarea.error {
+    border-color: #e74c3c !important;
+    background-color: #fef5f5;
+}
+
+/* Mensajes de error debajo de cada campo */
+.error-message {
+    color: #e74c3c;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    min-height: 20px;
+}
+
+/* Botón de envío */
+.btn-enviar {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 30px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s, transform 0.2s;
+    margin-top: 10px;
+    border: 2px solid #3498db;
+}
+
+.btn-enviar:hover {
+    background: #2980b9;
+    border-color: #2980b9;
+}
+
+.btn-enviar:active {
+    transform: scale(0.98);
+}
+
+/* Mensaje de estado (éxito/error del backend) */
+.mensaje-estado {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    display: none; /* Oculto por defecto */
+}
+
+.mensaje-estado.exito {
+    display: block;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.mensaje-estado.error {
+    display: block;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Responsive: ajustes para móviles */
+@media (max-width: 480px) {
+    .container {
+        padding: 1.5rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    input, select, textarea, .btn-enviar {
+        padding: 10px 12px;
+    }
+}
