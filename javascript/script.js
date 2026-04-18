@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Se leen parámetros URL para mostrar estados del servidor
 
 const params = new URLSearchParams(window.location.search);
-const mensaje = document.getElementById("mensaje");
+//const mensaje = document.getElementById("mensaje");
 
 if (params.get("ok") === "1") {
   mensaje.textContent = "Usuario registrado correctamente";
