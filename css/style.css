@@ -43,6 +43,14 @@ h1 {
     text-align: center;
 }
 
+.logo {
+    display: block;
+    margin: 10px auto 20px auto; /* centra y separa */
+    width: 120px; /* ajusta tamaño */
+    height: auto;
+    opacity: 40%;
+}
+
 .descripcion {
     color: #7f8c8d;
     text-align: center;

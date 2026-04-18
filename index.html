@@ -1,77 +1,117 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es-ES">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Formulario de Contacto</title>
     <!-- Vinculación de la hoja de estilos CSS -->
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
     <!-- Contenedor principal centrado -->
     <div class="container">
-        <h1>📬 Contáctanos</h1>
-        <p class="descripcion">Completa el formulario y te responderemos a la brevedad.</p>
+      <h1>Registrar Usuarios</h1>
+      <img
+        src="./img/Logo_SmartGridRoom.png"
+        alt="Logo SmartGridRoom"
+        class="logo"
+      />
+      <!--<p class="descripcion">Completa el formulario y te responderemos a la brevedad.</p>
 
-        <!-- 
+         
             FORMULARIO 
             - Se usa POST para enviar datos sensibles.
             - La acción apunta a "procesar.php".
             - El evento 'submit' será interceptado por JavaScript para validación previa.
         -->
-        <form id="formulario-contacto" action="php/procesar.php" method="POST" novalidate>
-            <!-- Campo: Nombre completo -->
-            <div class="campo">
-                <label for="nombre">Nombre completo *</label>
-                <input type="text" id="nombre" name="nombre" placeholder="Ej: Ana García" required>
-                <span class="error-message" id="error-nombre"></span>
-            </div>
+      <form id="formulario-contacto" action="" method="POST" novalidate>
+        <!-- Campo: Nombre completo -->
+        <div class="campo">
+          <label for="nombre">Nombre completo *</label>
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            placeholder="Ej: Ana García"
+            required
+          />
+          <span class="error-message" id="error-nombre"></span>
+        </div>
 
-            <!-- Campo: Correo electrónico -->
-            <div class="campo">
-                <label for="correo">Correo electrónico *</label>
-                <input type="email" id="correo" name="correo" placeholder="ana@correo.com" required>
-                <span class="error-message" id="error-email"></span>
-            </div>
+        <!-- Campo: Correo electrónico -->
+        <div class="campo">
+          <label for="correo">Correo electrónico *</label>
+          <input
+            type="correo"
+            id="correo"
+            name="correo"
+            placeholder="ana@correo.com"
+            required
+          />
+          <span class="error-message" id="error-correo"></span>
+        </div>
 
-            <!-- Campo: Teléfono -->
-            <div class="campo">
-                <label for="telefono">Teléfono *</label>
-                <input type="tel" id="telefono" name="telefono" placeholder="+57 312 345 678" required>
-                <span class="error-message" id="error-telefono"></span>
-            </div>
+        <!-- Campo: Contraseña -->
+        <div class="campo">
+          <label for="password">Contraseña *</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Ej 345%Este&.*"
+            required
+          />
+          <span class="error-message" id="error-password"></span>
+        </div>
 
-            <!-- Campo: Asunto (select para opciones predefinidas) -->
-            <div class="campo">
-                <label for="asunto">Asunto *</label>
-                <select id="asunto" name="asunto" required>
-                    <option value="" disabled selected>-- Selecciona un motivo --</option>
-                    <option value="consulta">Consulta general</option>
-                    <option value="soporte">Soporte técnico</option>
-                    <option value="presupuesto">Solicitar presupuesto</option>
-                    <option value="otro">Otro</option>
-                </select>
-                <span class="error-message" id="error-asunto"></span>
-            </div>
+        <!-- Campo: Teléfono -->
+        <div class="campo">
+          <label for="telefono">Teléfono *</label>
+          <input
+            type="tel"
+            id="telefono"
+            name="telefono"
+            placeholder="+57 312 345 678"
+            required
+          />
+          <span class="error-message" id="error-telefono"></span>
+        </div>
 
-            <!-- Campo: Mensaje (textarea) -->
-            <div class="campo">
-                <label for="mensaje">Mensaje *</label>
-                <textarea id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
-                <span class="error-message" id="error-mensaje"></span>
-            </div>
+        <!-- Campo: Rol (select para opciones predefinidas) -->
+        <div class="campo">
+          <label for="rol">Rol *</label>
+          <select id="rol" name="rol" required>
+            <option value="" disabled selected>-- Selecciona el rol --</option>
+            <option value="admon">Administrador</option>
+            <option value="operador">Operador</option>
+          </select>
+          <span class="error-message" id="error-rol"></span>
+        </div>
 
-            <!-- Botón de envío -->
-            <button type="submit" class="btn-enviar">Enviar mensaje</button>
+        <!-- Campo: Esto (select para indicar activo o desactivo) -->
+        <div class="campo">
+          <label for="estado">Estado del usuario *</label>
+          <select id="estado" name="estado" required>
+            <option value="" disabled selected>
+              -- Selecciona el estado del usuario --
+            </option>
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+          <span class="error-message" id="error-estado"></span>
+        </div>
 
-            <!-- Zona para mostrar mensajes de estado (éxito/error) provenientes del backend -->
-            <div id="mensaje-estado" class="mensaje-estado"></div>
-        </form>
+        <!-- Botón de envío -->
+        <button type="submit" class="btn-enviar">Crear Usuario</button>
+
+        <!-- Zona para mostrar mensajes de estado (éxito/error) provenientes del backend -->
+        <div id="mensaje-estado" class="mensaje-estado"></div>
+      </form>
     </div>
 
     <!-- Vinculación del archivo JavaScript -->
-    
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
