@@ -1,10 +1,4 @@
 // =====================================================
-// JAVASCRIPT - VALIDACIÓN FRONTEND
-// Intercepta el envío del formulario, valida campos,
-// muestra errores y previene envío si no es válido.
-// =====================================================
-
-// =====================================================
 // SMARTGRIDROOM - VALIDACIÓN FRONTEND
 // Este script valida el formulario antes de enviarlo al backend.
 // Evita datos incorrectos y mejora la seguridad del sistema.
