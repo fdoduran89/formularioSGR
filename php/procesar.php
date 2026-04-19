@@ -1,6 +1,8 @@
 <?php
+session_start();
 include("conexion.php");
 
+//Evita que alguien acceda directamente a: procesar.php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // SANITIZACIÓN
@@ -11,8 +13,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $rol = trim(htmlspecialchars($_POST['rol']));
     $estado = trim(htmlspecialchars($_POST['estado']));
 
-        // VALIDACIÓN CAMPOS VACÍOS
-        if (
+    // VALIDACIÓN CAMPOS VACÍOS
+    if (
         empty($nombre) ||
         empty($correo) ||
         empty($password) ||
@@ -20,37 +22,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         empty($rol) ||
         empty($estado)
     ) {
-        echo "<script>
-            alert('Todos los campos son obligatorios');
-            window.history.back();
-        </script>";
+        $_SESSION['error'] = "Todos los campos son obligatorios";
+        header("Location: ../index.php");
         exit();
     }
 
-        // VALIDACIÓN EMAIL
-        if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-        echo "<script>
-            alert('Correo inválido');
-            window.history.back();
-        </script>";
+    // VALIDACIÓN correo
+    if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = "Correo inválido";
+        header("Location: index.php");
         exit();
     }
 
-        // VALIDACIÓN PASSWORD (REGEX)
-        if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/", $password)) {
-        echo "<script>
-            alert('Contraseña inválida: mínimo 8 caracteres, 1 mayúscula, 1 minúscula y 1 símbolo');
-            window.history.back();
-        </script>";
-        exit();
+    // VALIDACIÓN PASSWORD (REGEX)
+if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/", $password)) {
+    $_SESSION['error'] = "Contraseña inválida (mínimo 8 caracteres, mayúscula, minúscula y símbolo)";
+    header("Location: ../index.php");
+    exit();
+}
+
+    // HASH DE CONTRASEÑA (SEGURIDAD)
+    $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+
+    // VALIDAR SI EL CORREO YA EXISTE
+    $check = $conn->prepare("SELECT id FROM usuarios WHERE correo = ?");
+    $check->bind_param("s", $correo);
+    $check->execute();
+    $check->store_result();
+
+    if ($check->num_rows > 0) {
+    $_SESSION['warning'] = "Este correo ya está registrado";
+
+    $check->close();
+    header("Location: ../index.php");
+    exit();
     }
 
-        // HASH DE CONTRASEÑA (SEGURIDAD)
-        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+    $check->close();
 
-        // INSERT SEGURIDAD SQL
-        $stmt = $conn->prepare("
-        INSERT INTO contactos (nombre, correo, password, telefono, rol, estado)
+    // INSERT SEGURIDAD SQL
+    $stmt = $conn->prepare("
+        INSERT INTO usuarios (nombre, correo, password, telefono, rol, estado)
         VALUES (?, ?, ?, ?, ?, ?)
     ");
 
@@ -64,27 +76,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $estado
     );
 
-        // EJECUCIÓN
-        if ($stmt->execute()) {
+    // EJECUCIÓN
+      if ($stmt->execute()) {
+        $_SESSION['success'] = "Usuario creado correctamente";
+    } else {
+        $_SESSION['error'] = "Error al guardar en la base de datos";
+    }
 
     $stmt->close();
     $conn->close();
 
-    echo "<script>
-        alert('Datos enviados correctamente');
-        window.location='/formulario/index.php';
-    </script>";
-    exit();
-
-} else {
-
-    $stmt->close();
-    $conn->close();
-
-    echo "<script>
-        alert('Error al guardar en la base de datos');
-        window.location='/formulario/index.html';
-    </script>";
+    header("Location: ../index.php");
     exit();
 }
-}
+?>

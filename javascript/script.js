@@ -10,13 +10,17 @@
 // Evita datos incorrectos y mejora la seguridad del sistema.
 // =====================================================
 
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const telefonoRegex = /^[\d\s\+\-\(\)]{7,20}$/;
+
 document.addEventListener("DOMContentLoaded", function () {
   // 1. REFERENCIAS AL DOM (INPUTS DEL FORMULARIO)
   const formulario = document.getElementById("formulario-contacto");
 
   const inputs = {
     nombre: document.getElementById("nombre"),
-    email: document.getElementById("correo"), //
+    correo: document.getElementById("correo"), //
     password: document.getElementById("password"),
     telefono: document.getElementById("telefono"),
     rol: document.getElementById("rol"),
@@ -26,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // 2. REFERENCIAS A MENSAJES DE ERROR
   const errores = {
     nombre: document.getElementById("error-nombre"),
-    email: document.getElementById("error-email"),
+    correo: document.getElementById("error-correo"),
     password: document.getElementById("error-password"),
     telefono: document.getElementById("error-telefono"),
     rol: document.getElementById("error-rol"),
@@ -34,16 +38,16 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   // Mensaje global del backend (éxito o error general)
-  const mensajeEstado = document.getElementById("mensaje-estado");
+  //const mensajeEstado = document.getElementById("mensaje-estado");
 
   // 3. FUNCIÓN PRINCIPAL DE VALIDACIÓN
   function validarFormulario() {
     let esValido = true;
 
     // Limpiar mensaje global
-    mensajeEstado.className = "mensaje-estado";
+    /*mensajeEstado.className = "mensaje-estado";
     mensajeEstado.style.display = "none";
-    mensajeEstado.textContent = "";
+    mensajeEstado.textContent = "";*/
 
     // Limpiar errores anteriores
     for (let campo in inputs) {
@@ -58,13 +62,12 @@ document.addEventListener("DOMContentLoaded", function () {
       esValido = false;
     }
 
-    // 5. VALIDACIÓN: EMAIL
+    // 5. VALIDACIÓN: correo
 
-    const email = inputs.email.value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const correo = inputs.correo.value.trim();
 
-    if (!emailRegex.test(email)) {
-      mostrarError("email", "Correo electrónico inválido.");
+    if (!correoRegex.test(correo)) {
+      mostrarError("correo", "Correo electrónico inválido.");
       esValido = false;
     }
 
@@ -75,7 +78,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // - 1 minúscula
     // - 1 carácter especial
     const password = inputs.password.value.trim();
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
 
     if (!passwordRegex.test(password)) {
       mostrarError(
@@ -88,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 7. VALIDACIÓN: TELÉFONO
     const telefono = inputs.telefono.value.trim();
 
-    if (!/^[\d\s\+\-\(\)]{7,20}$/.test(telefono)) {
+    if (!telefonoRegex.test(telefono)) {
       mostrarError("telefono", "Número de teléfono inválido.");
       esValido = false;
     }
@@ -114,9 +116,12 @@ document.addEventListener("DOMContentLoaded", function () {
     errores[campo].textContent = mensaje;
   }
 
+  console.log("JS cargado correctamente");
+
   // 11. EVENTO SUBMIT DEL FORMULARIO
   formulario.addEventListener("submit", function (e) {
     e.preventDefault(); // evita envío automático
+    console.log("Submit detectado");
 
     // Validar antes de enviar
     if (!validarFormulario()) {
@@ -125,19 +130,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Confirmación de envío
-    Swal.fire({
-      title: "¿Enviar formulario?",
-      text: "Verifica que los datos sean correctos",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Sí, enviar",
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        formulario.submit(); // envío real al backend (PHP)
-      }
-    });
-  });
+    /*mensajeEstado.className = "mensaje-estado";
+    mensajeEstado.style.display = "none";
+    mensajeEstado.textContent = "";*/
 
   // 12. VALIDACIÓN EN TIEMPO REAL (BLUR)
   for (let campo in inputs) {
@@ -150,19 +145,17 @@ document.addEventListener("DOMContentLoaded", function () {
           if (valor.length < 3) mensajeError = "Mínimo 3 caracteres.";
           break;
 
-        case "email":
-          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor))
-            mensajeError = "Correo inválido.";
+        case "correo":
+          if (!correoRegex.test(valor)) mensajeError = "Correo inválido.";
           break;
 
         case "password":
-          if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/.test(valor))
+          if (!passwordRegex.test(valor))
             mensajeError = "Contraseña no cumple los requisitos.";
           break;
 
         case "telefono":
-          if (!/^[\d\s\+\-\(\)]{7,20}$/.test(valor))
-            mensajeError = "Teléfono inválido.";
+          if (!telefonoRegex.test(valor)) mensajeError = "Teléfono inválido.";
           break;
 
         case "rol":
@@ -188,15 +181,15 @@ document.addEventListener("DOMContentLoaded", function () {
 // Se leen parámetros URL para mostrar estados del servidor
 
 const params = new URLSearchParams(window.location.search);
-//const mensaje = document.getElementById("mensaje");
+const mensaje = document.getElementById("mensaje");
 
 if (params.get("ok") === "1") {
   mensaje.textContent = "Usuario registrado correctamente";
   mensaje.style.color = "green";
 }
 
-if (params.get("error") === "email") {
-  mensaje.textContent = "Email inválido";
+if (params.get("error") === "correo") {
+  mensaje.textContent = "correo inválido";
   mensaje.style.color = "red";
 }
 

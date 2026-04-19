@@ -8,7 +8,7 @@ Descripción: Establece la conexión con la base de datos MariaDB en XAMPP.
 $host = "localhost"; //127.0.0.1
 $usuario = "root";
 $password = ""; // En XAMPP por defecto está vacío
-$bd = "usuarios";
+$bd = "accesosgr";
 $puerto = 3307; //3306 si cambias el puerto
 
 // Crear conexión
