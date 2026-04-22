@@ -1,7 +1,5 @@
 // =====================================================
 // SMARTGRIDROOM - VALIDACIÓN FRONTEND
-// Este script valida el formulario antes de enviarlo al backend.
-// Evita datos incorrectos y mejora la seguridad del sistema.
 // =====================================================
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
@@ -9,19 +7,18 @@ const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const telefonoRegex = /^[\d\s\+\-\(\)]{7,20}$/;
 
 document.addEventListener("DOMContentLoaded", function () {
-  // 1. REFERENCIAS AL DOM (INPUTS DEL FORMULARIO)
+  // 1. REFERENCIAS AL DOM
   const formulario = document.getElementById("formulario-contacto");
 
   const inputs = {
     nombre: document.getElementById("nombre"),
-    correo: document.getElementById("correo"), //
+    correo: document.getElementById("correo"),
     password: document.getElementById("password"),
     telefono: document.getElementById("telefono"),
     rol: document.getElementById("rol"),
     estado: document.getElementById("estado"),
   };
 
-  // 2. REFERENCIAS A MENSAJES DE ERROR
   const errores = {
     nombre: document.getElementById("error-nombre"),
     correo: document.getElementById("error-correo"),
@@ -31,106 +28,71 @@ document.addEventListener("DOMContentLoaded", function () {
     estado: document.getElementById("error-estado"),
   };
 
-  // Mensaje global del backend (éxito o error general)
-  //const mensajeEstado = document.getElementById("mensaje-estado");
+  // 2. FUNCIÓN PARA MOSTRAR ERRORES
+  function mostrarError(campo, mensaje) {
+    inputs[campo].classList.add("error");
+    errores[campo].textContent = mensaje;
+  }
 
-  // 3. FUNCIÓN PRINCIPAL DE VALIDACIÓN
+  // 3. VALIDACIÓN PRINCIPAL
   function validarFormulario() {
     let esValido = true;
 
-    // Limpiar mensaje global
-    /*mensajeEstado.className = "mensaje-estado";
-    mensajeEstado.style.display = "none";
-    mensajeEstado.textContent = "";*/
-
-    // Limpiar errores anteriores
+    // Limpiar errores
     for (let campo in inputs) {
       inputs[campo].classList.remove("error");
       errores[campo].textContent = "";
     }
 
-    // 4. VALIDACIÓN: NOMBRE
+    // Nombre
     const nombre = inputs.nombre.value.trim();
     if (nombre.length < 3) {
       mostrarError("nombre", "El nombre debe tener al menos 3 caracteres.");
       esValido = false;
     }
 
-    // 5. VALIDACIÓN: correo
-
+    // Correo
     const correo = inputs.correo.value.trim();
-
     if (!correoRegex.test(correo)) {
       mostrarError("correo", "Correo electrónico inválido.");
       esValido = false;
     }
 
-    // 6. VALIDACIÓN: CONTRASEÑA
-    // Reglas:
-    // - mínimo 8 caracteres
-    // - 1 mayúscula
-    // - 1 minúscula
-    // - 1 carácter especial
+    // Password
     const password = inputs.password.value.trim();
-
     if (!passwordRegex.test(password)) {
       mostrarError(
         "password",
-        "La contraseña debe tener mínimo 8 caracteres, 1 mayúscula, 1 minúscula y 1 carácter especial.",
+        "Mínimo 8 caracteres, 1 mayúscula, 1 minúscula y 1 símbolo.",
       );
       esValido = false;
     }
 
-    // 7. VALIDACIÓN: TELÉFONO
+    // Teléfono
     const telefono = inputs.telefono.value.trim();
-
     if (!telefonoRegex.test(telefono)) {
       mostrarError("telefono", "Número de teléfono inválido.");
       esValido = false;
     }
 
-    // 8. VALIDACIÓN: ROL
+    // Rol
     if (inputs.rol.value === "") {
-      mostrarError("rol", "Debes seleccionar un rol.");
+      mostrarError("rol", "Selecciona un rol.");
       esValido = false;
     }
 
-    // 9. VALIDACIÓN: ESTADO
+    // Estado
     if (inputs.estado.value === "") {
-      mostrarError("estado", "Debes seleccionar un estado.");
+      mostrarError("estado", "Selecciona un estado.");
       esValido = false;
     }
 
     return esValido;
   }
 
-  // 10. FUNCIÓN PARA MOSTRAR ERRORES
-  function mostrarError(campo, mensaje) {
-    inputs[campo].classList.add("error");
-    errores[campo].textContent = mensaje;
-  }
-
-  console.log("JS cargado correctamente");
-
-  // 11. EVENTO SUBMIT DEL FORMULARIO
-  formulario.addEventListener("submit", function (e) {
-    e.preventDefault(); // evita envío automático
-    console.log("Submit detectado");
-
-    // Validar antes de enviar
-    if (!validarFormulario()) {
-      Swal.fire("Error", "Corrige los errores del formulario", "error");
-      return;
-    }
-
-    // Confirmación de envío
-    /*mensajeEstado.className = "mensaje-estado";
-    mensajeEstado.style.display = "none";
-    mensajeEstado.textContent = "";*/
-
-  // 12. VALIDACIÓN EN TIEMPO REAL (BLUR)
+  // 4. VALIDACIÓN EN TIEMPO REAL (MEJOR CON "input")
   for (let campo in inputs) {
-    inputs[campo].addEventListener("blur", function () {
+    inputs[campo].addEventListener("input", function () {
       const valor = this.value.trim();
       let mensajeError = "";
 
@@ -145,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         case "password":
           if (!passwordRegex.test(valor))
-            mensajeError = "Contraseña no cumple los requisitos.";
+            mensajeError = "Contraseña no válida.";
           break;
 
         case "telefono":
@@ -169,30 +131,28 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  // 5. EVENTO SUBMIT
+  formulario.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    if (!validarFormulario()) {
+      Swal.fire("Error", "Corrige los errores del formulario", "error");
+      return;
+    }
+
+    // Confirmación antes de enviar
+    Swal.fire({
+      title: "¿Enviar formulario?",
+      text: "Verifica que los datos sean correctos",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, enviar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        formulario.submit();
+      }
+    });
+  });
 });
-
-// 13. MENSAJES DESDE EL BACKEND (PHP)
-// Se leen parámetros URL para mostrar estados del servidor
-
-const params = new URLSearchParams(window.location.search);
-const mensaje = document.getElementById("mensaje");
-
-if (params.get("ok") === "1") {
-  mensaje.textContent = "Usuario registrado correctamente";
-  mensaje.style.color = "green";
-}
-
-if (params.get("error") === "correo") {
-  mensaje.textContent = "correo inválido";
-  mensaje.style.color = "red";
-}
-
-if (params.get("error") === "password") {
-  mensaje.textContent = "Contraseña inválida";
-  mensaje.style.color = "red";
-}
-
-if (params.get("error") === "bd") {
-  mensaje.textContent = "Error al guardar en la base de datos";
-  mensaje.style.color = "red";
-}
